@@ -86,6 +86,7 @@ public:
     void SetReplaceAVCIHeader(bool enable);                         // default false; requires SetAVCIHeader if true
     void SetAFD(uint8_t afd);                                       // default not set
     void SetInputHeight(uint32_t height);                           // uncompressed; default 0
+    void SetVC2ModeFlags(int flags);                                // default VC2_PICTURE_ONLY | VC2_COMPLETE_SEQUENCES
 
     // Sound properties
     void SetAES3Mapping(bool enable);               // default BWF mapping
@@ -100,6 +101,9 @@ public:
     // Data properties
     void SetConstantDataSize(uint32_t size);
     void SetMaxDataSize(uint32_t size);
+
+    // Properties from input descriptor
+    void UpdateFileDescriptor(mxfpp::FileDescriptor *file_desc_in);
 
 public:
     void WriteSamples(const unsigned char *data, uint32_t size, uint32_t num_samples);

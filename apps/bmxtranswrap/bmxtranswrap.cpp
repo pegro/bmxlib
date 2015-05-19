@@ -82,6 +82,7 @@ using namespace mxfpp;
 
 typedef struct
 {
+    MXFTrackReader *input_track_reader;
     const MXFTrackInfo *input_track_info;
     FrameBuffer *input_buffer;
     ClipWriterTrack *track;
@@ -439,6 +440,10 @@ static void usage(const char *cmd)
     fprintf(stderr, "\n");
     fprintf(stderr, "  -a <n:d>                Override or set the image aspect ratio. Either 4:3 or 16:9.\n");
     fprintf(stderr, "  --bsar                  Set image aspect ratio in video bitstream. Currently supports D-10 essence types only\n");
+    fprintf(stderr, "  --vc2-mode <mode>       Set the mode that determines how the VC-2 data is wrapped\n");
+    fprintf(stderr, "                          <mode> is one of the following integer values:\n");
+    fprintf(stderr, "                            0: Passthrough input, but remove duplicate/redundant sequence headers, fix parse info offsets and picture numbers\n");
+    fprintf(stderr, "                            1: (default) Same as 0, but remove auxiliary and padding data units and complete the sequence in each frame\n");
     fprintf(stderr, "  --locked <bool>         Override or set flag indicating whether the number of audio samples is locked to the video. Either true or false\n");
     fprintf(stderr, "  --audio-ref <level>     Override or set audio reference level, number of dBm for 0VU\n");
     fprintf(stderr, "  --dial-norm <value>     Override or set gain to be applied to normalize perceived loudness of the clip\n");
@@ -663,9 +668,12 @@ int main(int argc, const char** argv)
     uint8_t rdd6_sdid = DEFAULT_RDD6_SDID;
     uint32_t http_min_read = DEFAULT_HTTP_MIN_READ;
     bool zero_mp_track_num = false;
+    int vc2_mode_flags;
     int value, num, den;
     unsigned int uvalue;
     int cmdln_index;
+
+    parse_vc2_mode("1", &vc2_mode_flags);
 
     if (argc == 1) {
         usage(argv[0]);
@@ -1045,6 +1053,22 @@ int main(int argc, const char** argv)
         else if (strcmp(argv[cmdln_index], "--bsar") == 0)
         {
             set_bs_aspect_ratio = true;
+        }
+        else if (strcmp(argv[cmdln_index], "--vc2-mode") == 0)
+        {
+            if (cmdln_index + 1 >= argc)
+            {
+                usage(argv[0]);
+                fprintf(stderr, "Missing argument for option '%s'\n", argv[cmdln_index]);
+                return 1;
+            }
+            if (!parse_vc2_mode(argv[cmdln_index + 1], &vc2_mode_flags))
+            {
+                usage(argv[0]);
+                fprintf(stderr, "Invalid value '%s' for option '%s'\n", argv[cmdln_index + 1], argv[cmdln_index]);
+                return 1;
+            }
+            cmdln_index++;
         }
         else if (strcmp(argv[cmdln_index], "--locked") == 0)
         {
@@ -2463,6 +2487,7 @@ int main(int argc, const char** argv)
                 OutputTrack output_track;
                 memset(&output_track, 0, sizeof(output_track));
 
+                output_track.input_track_reader  = input_track_reader;
                 output_track.input_track_info    = input_track_info;
                 output_track.input_buffer        = input_track_reader->GetFrameBuffer();
                 output_track.data_def            = input_track_info->data_def;
@@ -2689,6 +2714,15 @@ int main(int argc, const char** argv)
                         else
                             output_track.track->SetAspectRatio(input_picture_info->aspect_ratio);
                         break;
+                    case VC2:
+                        if (user_aspect_ratio_set)
+                            output_track.track->SetAspectRatio(user_aspect_ratio);
+                        else
+                            output_track.track->SetAspectRatio(input_picture_info->aspect_ratio);
+                        if (afd)
+                            output_track.track->SetAFD(afd);
+                        output_track.track->SetVC2ModeFlags(vc2_mode_flags);
+                        break;
                     case VC3_1080P_1235:
                     case VC3_1080P_1237:
                     case VC3_1080P_1238:
@@ -2822,6 +2856,19 @@ int main(int argc, const char** argv)
             sample_sequence.push_back(1);
         }
         BMX_ASSERT(max_samples_per_read == 1 || (precharge == 0 && rollout == 0));
+
+
+        // prepare the header metadata and update file descriptors from input where supported
+
+        clip->PrepareHeaderMetadata();
+        for (i = 0; i < output_tracks.size(); i++) {
+            OutputTrack& output_track = output_tracks[i];
+            if (output_track.input_track_reader) {
+                FileDescriptor *file_desc = output_track.input_track_reader->GetFileDescriptor();
+                if (file_desc)
+                    output_track.track->UpdateFileDescriptor(file_desc);
+            }
+        }
 
 
         // realtime transwrapping

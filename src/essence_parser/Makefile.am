@@ -14,6 +14,7 @@ libessenceparser_la_SOURCES = \
 	MPEG2EssenceParser.cpp \
 	RawEssenceReader.cpp \
 	SoundConversion.cpp \
+	VC2EssenceParser.cpp \
 	VC3EssenceParser.cpp
 
 libessenceparser_la_CXXFLAGS = $(BMX_CFLAGS)

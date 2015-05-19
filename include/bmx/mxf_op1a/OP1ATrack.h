@@ -66,6 +66,7 @@ public:
     void SetLowerLevelSourcePackage(mxfUMID package_uid, uint32_t track_id);
 
 public:
+    virtual void UpdateFileDescriptor(mxfpp::FileDescriptor *file_desc_in) { (void)file_desc_in; };
     void WriteSamples(const unsigned char *data, uint32_t size, uint32_t num_samples);
 
 public:

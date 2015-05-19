@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <MXFDictionary>
 
+  <MXFTypes>
+    <Multiple>
+      <UInt8Batch base="UInt8" type="Batch"/>
+    </Multiple>
+  </MXFTypes>
+
+
   <Preface>
     <IsRIPPresent type="Boolean" use="optional" globalKey="06 0e 2b 34 01 01 01 0e 04 04 05 03 00 00 00 00"/>
   </Preface>
@@ -22,5 +29,15 @@
     <AVCSequenceParameterSetFlag  type="UInt8"    use="optional"  globalKey="06 0e 2b 34 01 01 01 0e 04 01 06 06 01 10 00 00"/>
     <AVCPictureParameterSetFlag   type="UInt8"    use="optional"  globalKey="06 0e 2b 34 01 01 01 0e 04 01 06 06 01 11 00 00"/>
   </AVCSubDescriptor>
+
+  <VC2SubDescriptor base="SubDescriptor" type="localSet" key="06 0e 2b 34 02 53 01 01 0d 01 01 01 01 01 74 00">
+    <VC2MajorVersion                  type="UInt8"      use="required"  globalKey="06 0e 2b 34 01 01 01 0e 04 01 06 07 01 00 00 00"/>
+    <VC2MinorVersion                  type="UInt8"      use="required"  globalKey="06 0e 2b 34 01 01 01 0e 04 01 06 07 02 00 00 00"/>
+    <VC2Profile                       type="UInt8"      use="required"  globalKey="06 0e 2b 34 01 01 01 0e 04 01 06 07 03 00 00 00"/>
+    <VC2Level                         type="UInt8"      use="required"  globalKey="06 0e 2b 34 01 01 01 0e 04 01 06 07 04 00 00 00"/>
+    <VC2WaveletFilters                type="UInt8Batch" use="optional"  globalKey="06 0e 2b 34 01 01 01 0e 04 01 06 07 05 00 00 00"/>
+    <VC2SequenceHeadersIdentical      type="Boolean"    use="optional"  globalKey="06 0e 2b 34 01 01 01 0e 04 01 06 07 06 00 00 00"/>
+    <VC2EditUnitsAreCompleteSequences type="Boolean"    use="optional"  globalKey="06 0e 2b 34 01 01 01 0e 04 01 06 07 07 00 00 00"/>
+  </VC2SubDescriptor>
 
 </MXFDictionary>
