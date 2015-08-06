@@ -43,6 +43,9 @@ using namespace std;
 using namespace bmx;
 
 
+#define WORKSPACE_ALLOC_SIZE  4096
+
+
 VC2WriterHelper::VC2WriterHelper()
 {
     mModeFlags = VC2_PICTURE_ONLY | VC2_COMPLETE_SEQUENCES;
@@ -58,11 +61,8 @@ VC2WriterHelper::VC2WriterHelper()
     memset(&mCurrentSequenceHeader, 0, sizeof(mCurrentSequenceHeader));
     mIdenticalSequence = true;
     mCompleteSequence = true;
-    mWorkspace = 0;
-    mWorkspaceAllocSize = 0;
+    mWorkspace = new unsigned char[WORKSPACE_ALLOC_SIZE];
     mWorkspaceSize = 0;
-
-    AssertWorkspace(3 * VC2_PARSE_INFO_SIZE + 2 * 4);
 }
 
 VC2WriterHelper::~VC2WriterHelper()
@@ -297,7 +297,7 @@ void VC2WriterHelper::UpdateDescriptor(VC2MXFDescriptorHelper *descriptor_helper
 
 uint32_t VC2WriterHelper::WriteParseInfo()
 {
-    AssertWorkspace(VC2_PARSE_INFO_SIZE);
+    BMX_CHECK(mWorkspaceSize + VC2_PARSE_INFO_SIZE <= WORKSPACE_ALLOC_SIZE);
 
     unsigned char *data = &mWorkspace[mWorkspaceSize];
     data[0] = 0x42;
@@ -326,7 +326,7 @@ uint32_t VC2WriterHelper::WriteParseInfo()
 
 uint32_t VC2WriterHelper::WritePictureHeader(uint32_t picture_number)
 {
-    AssertWorkspace(4);
+    BMX_CHECK(mWorkspaceSize + 4 <= WORKSPACE_ALLOC_SIZE);
 
     unsigned char *data = &mWorkspace[mWorkspaceSize];
     data[0] = (uint8_t)(picture_number >> 24);
@@ -342,21 +342,4 @@ uint32_t VC2WriterHelper::WritePictureHeader(uint32_t picture_number)
     mWorkspaceSize += 4;
 
     return c_data_buf.size;
-}
-
-void VC2WriterHelper::AssertWorkspace(uint32_t ext_size)
-{
-    if (mWorkspaceSize + ext_size <= mWorkspaceAllocSize)
-        return;
-
-    uint32_t new_alloc_size = mWorkspaceAllocSize + 32;
-    if (mWorkspaceSize + ext_size > new_alloc_size)
-        new_alloc_size = mWorkspaceSize + ext_size;
-
-    unsigned char *new_workspace = new unsigned char[new_alloc_size];
-    if (mWorkspaceSize > 0)
-        memcpy(new_workspace, mWorkspace, mWorkspaceSize);
-    delete [] mWorkspace;
-    mWorkspace = new_workspace;
-    mWorkspaceAllocSize = new_alloc_size;
 }

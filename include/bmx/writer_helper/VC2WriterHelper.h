@@ -71,8 +71,6 @@ private:
     uint32_t GetWaveletTransformOffset(uint32_t picture_number);
     uint32_t WritePictureHeader(uint32_t picture_number);
 
-    void AssertWorkspace(uint32_t ext_size);
-
 private:
     VC2EssenceParser mEssenceParser;
     int mModeFlags;
