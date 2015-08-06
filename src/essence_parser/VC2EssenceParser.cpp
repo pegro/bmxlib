@@ -204,7 +204,8 @@ uint64_t VC2GetBitBuffer::GetUInt()
 
 VC2EssenceParser::VC2EssenceParser()
 {
-    Reset();
+    memset(&mSequenceHeader, 0, sizeof(mSequenceHeader));
+    ResetFrameParse();
 }
 
 VC2EssenceParser::~VC2EssenceParser()
@@ -426,9 +427,8 @@ uint32_t VC2EssenceParser::ParsePictureHeader(const unsigned char *data, uint32_
     return ParsePictureHeader(&buffer, picture_header);
 }
 
-void VC2EssenceParser::Reset()
+void VC2EssenceParser::ResetFrameParse()
 {
-    memset(&mSequenceHeader, 0, sizeof(mSequenceHeader));
     ResetFrameSize();
     ResetFrameInfo();
 }

@@ -102,7 +102,7 @@ uint32_t VC2WriterHelper::ProcessFrame(const unsigned char *data, uint32_t size,
 {
     // extract information
 
-    mEssenceParser.Reset();
+    mEssenceParser.ResetFrameParse();
     mEssenceParser.ParseFrameInfo(data, size);
 
     const vector<VC2EssenceParser::ParseInfo> input_parse_infos = mEssenceParser.GetParseInfos();

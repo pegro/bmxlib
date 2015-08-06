@@ -142,7 +142,7 @@ public:
     uint32_t ParseSequenceHeader(const unsigned char *data, uint32_t data_size, SequenceHeader *sequence_header);
     uint32_t ParsePictureHeader(const unsigned char *data, uint32_t data_size, PictureHeader *picture_header);
 
-    void Reset();
+    void ResetFrameParse();
 
 public:
     bool FrameHasSequenceHeader() const               { return mFrameHasSequenceHeader; }
