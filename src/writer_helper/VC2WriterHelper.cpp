@@ -95,6 +95,8 @@ void VC2WriterHelper::SetSequenceHeader(const unsigned char *data, uint32_t size
     }
     memcpy(mSeqHeaderData, data, actual_size);
     mSeqHeaderDataSize = actual_size;
+
+    mEssenceParser.SetSequenceHeader(&mCurrentSequenceHeader);
 }
 
 uint32_t VC2WriterHelper::ProcessFrame(const unsigned char *data, uint32_t size,

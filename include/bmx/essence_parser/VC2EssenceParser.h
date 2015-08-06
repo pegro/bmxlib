@@ -144,6 +144,8 @@ public:
 
     void ResetFrameParse();
 
+    void SetSequenceHeader(const SequenceHeader *sequence_header);
+
 public:
     bool FrameHasSequenceHeader() const               { return mFrameHasSequenceHeader; }
     const SequenceHeader* GetSequenceHeader() const   { return &mSequenceHeader; }

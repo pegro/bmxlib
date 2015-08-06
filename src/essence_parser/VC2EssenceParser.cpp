@@ -433,6 +433,11 @@ void VC2EssenceParser::ResetFrameParse()
     ResetFrameInfo();
 }
 
+void VC2EssenceParser::SetSequenceHeader(const SequenceHeader *sequence_header)
+{
+    memcpy(&mSequenceHeader, sequence_header, sizeof(mSequenceHeader));
+}
+
 const VC2EssenceParser::PictureHeader* VC2EssenceParser::GetPictureHeader2() const
 {
     if (mPictureCount > 1)
