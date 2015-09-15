@@ -289,14 +289,25 @@ void VC2MXFDescriptorHelper::SetSequenceHeader(const VC2EssenceParser::SequenceH
             }
         }
     }
-    // TODO: should mark partition as incomplete if these properties are not known
     if (!cdci_descriptor->haveAspectRatio()) {
-        Rational distinguished_value = {0, 0};
-        cdci_descriptor->setAspectRatio(distinguished_value);
+        Rational calc_aspect_ratio;
+        calc_aspect_ratio.numerator   = (int32_t)(sequence_header->source_params.pixel_aspect_ratio_numer * sequence_header->source_params.clean_width);
+        calc_aspect_ratio.denominator = (int32_t)(sequence_header->source_params.pixel_aspect_ratio_denom * sequence_header->source_params.clean_height);
+        cdci_descriptor->setAspectRatio(reduce_rational(calc_aspect_ratio));
     }
     if (!cdci_descriptor->haveVideoLineMap()) {
-        cdci_descriptor->appendVideoLineMap(0);
-        cdci_descriptor->appendVideoLineMap(0);
+        if (sequence_header->source_params.source_sampling == 0 &&
+            sequence_header->picture_coding_mode == 0)
+        {
+            // MXF_FULL_FRAME
+            cdci_descriptor->appendVideoLineMap(1);
+            cdci_descriptor->appendVideoLineMap(0);
+        }
+        else
+        {
+            cdci_descriptor->appendVideoLineMap(1);
+            cdci_descriptor->appendVideoLineMap((int32_t)((sequence_header->source_params.frame_height / 2) + 1));
+        }
     }
 }
 

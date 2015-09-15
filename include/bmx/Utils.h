@@ -114,6 +114,8 @@ Rational convert_int_to_rational(int32_t value);
 std::string get_timecode_string(Timecode timecode);
 std::string get_umid_string(UMID umid);
 
+Rational reduce_rational(Rational rational);
+
 Rational normalize_rate(Rational rate);
 
 uint8_t get_system_item_cp_rate(Rational frame_rate);
