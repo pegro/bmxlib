@@ -293,6 +293,14 @@ void VC2WriterHelper::UpdateDescriptor(VC2MXFDescriptorHelper *descriptor_helper
     descriptor_helper->SetWaveletFilters(wavelet_filter_vector);
     descriptor_helper->SetIdenticalSequence(mIdenticalSequence);
     descriptor_helper->SetCompleteSequence(mCompleteSequence);
+
+    if (!mIdenticalSequence || !mCompleteSequence) {
+        if (!mIdenticalSequence)
+            log_warn("VC-2 sequences are not identical\n");
+        if (!mCompleteSequence)
+            log_warn("VC-2 frames are not complete sequences\n");
+        log_warn("VC-2 is not using Operating Mode A\n");
+    }
 }
 
 uint32_t VC2WriterHelper::WriteParseInfo()
