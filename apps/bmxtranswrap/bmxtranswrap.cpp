@@ -442,7 +442,8 @@ static void usage(const char *cmd)
     fprintf(stderr, "  --bsar                  Set image aspect ratio in video bitstream. Currently supports D-10 essence types only\n");
     fprintf(stderr, "  --vc2-mode <mode>       Set the mode that determines how the VC-2 data is wrapped\n");
     fprintf(stderr, "                          <mode> is one of the following integer values:\n");
-    fprintf(stderr, "                            0: Passthrough input, but remove duplicate/redundant sequence headers, fix parse info offsets and picture numbers\n");
+    fprintf(stderr, "                            0: Passthrough input, but add a sequence header if not present, remove duplicate/redundant sequence headers\n");
+    fprintf(stderr, "                               and fix any incorrect parse info offsets and picture numbers\n");
     fprintf(stderr, "                            1: (default) Same as 0, but remove auxiliary and padding data units and complete the sequence in each frame\n");
     fprintf(stderr, "  --locked <bool>         Override or set flag indicating whether the number of audio samples is locked to the video. Either true or false\n");
     fprintf(stderr, "  --audio-ref <level>     Override or set audio reference level, number of dBm for 0VU\n");

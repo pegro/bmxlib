@@ -486,7 +486,8 @@ static void usage(const char *cmd)
     fprintf(stderr, "  --fixed-size            Set to indicate that the d10 frames have a fixed size and therefore do not need to be parsed after the first frame\n");
     fprintf(stderr, "  --vc2-mode <mode>       Set the mode that determines how the VC-2 data is wrapped\n");
     fprintf(stderr, "                          <mode> is one of the following integer values:\n");
-    fprintf(stderr, "                            0: Passthrough input, but remove duplicate/redundant sequence headers, fix parse info offsets and picture numbers\n");
+    fprintf(stderr, "                            0: Passthrough input, but add a sequence header if not present, remove duplicate/redundant sequence headers\n");
+    fprintf(stderr, "                               and fix any incorrect parse info offsets and picture numbers\n");
     fprintf(stderr, "                            1: (default) Same as 0, but remove auxiliary and padding data units and complete the sequence in each frame\n");
     fprintf(stderr, "\n");
     fprintf(stderr, "  as02:\n");
