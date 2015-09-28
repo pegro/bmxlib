@@ -463,7 +463,7 @@ static void usage(const char *cmd)
 {
     fprintf(stderr, "%s\n", get_app_version_info(APP_NAME).c_str());
     fprintf(stderr, "Usage: %s <<options>> <type> <filename>\n", cmd);
-    fprintf(stderr, "    <type> is 'avc', 'dv', 'mjpeg', 'm2v' or 'vc3'\n");
+    fprintf(stderr, "    <type> is 'avc', 'dv', 'mjpeg', 'm2v', 'vc2' or 'vc3'\n");
     fprintf(stderr, "Options:\n");
     fprintf(stderr, " -h | --help           Show usage and exit\n");
     fprintf(stderr, " -v | --version        Print version info to stderr\n");
