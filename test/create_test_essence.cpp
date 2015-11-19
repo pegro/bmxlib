@@ -478,12 +478,14 @@ static void write_vc2(FILE *file, unsigned int duration)
 {
     uint32_t next, prev;
     uint32_t size = 0;
+    uint32_t seq_end_offset;
 
     prev = 0;
     next = 13 + sizeof(VC2_SEQUENCE_HEADER);
     set_vc2_parse_info(&DATA[size], 0x00, next, prev);
     memcpy(&DATA[size + 13], VC2_SEQUENCE_HEADER, sizeof(VC2_SEQUENCE_HEADER));
     size += next;
+    seq_end_offset = size;
 
     prev = next;
     next = 13 + 4;
@@ -504,8 +506,12 @@ static void write_vc2(FILE *file, unsigned int duration)
     size += next;
 
     unsigned int i;
-    for (i = 0; i < duration; i++)
-        write_buffer(file, DATA, size);
+    for (i = 0; i < duration; i++) {
+        if (i == 0)
+            write_buffer(file, DATA, size);
+        else
+            write_buffer(file, &DATA[seq_end_offset], size - seq_end_offset);
+    }
 }
 
 static void write_vc3(FILE *file, int type, unsigned int duration)
