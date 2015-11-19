@@ -33,6 +33,7 @@
 #define BMX_VC2_ESSENCE_PARSER_H_
 
 #include <vector>
+#include <map>
 
 #include <bmx/essence_parser/EssenceParser.h>
 #include <bmx/BitBuffer.h>
@@ -186,6 +187,7 @@ private:
     int mPictureCount;
     uint32_t mSearchState;
     uint32_t mSearchCount;
+    std::map<uint8_t, bool> mSecondaryParseInfoLocs;
 
     bool mFrameHasSequenceHeader;
     SequenceHeader mSequenceHeader;

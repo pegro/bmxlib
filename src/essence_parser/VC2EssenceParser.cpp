@@ -271,6 +271,21 @@ uint32_t VC2EssenceParser::ParseFrameSize(const unsigned char *data, uint32_t da
                 frame_size = buffer.GetPos();
                 break;
             } else {
+                // decide whether Auxiliary/Padding units appear before (true) the picture or after (false)
+                if (!mSecondaryParseInfoLocs.count(mCurrentParseInfo.parse_code))
+                {
+                    if (mPictureCount == 0 || (mPictureCount == 1 && mSequenceHeader.picture_coding_mode == 1))
+                        mSecondaryParseInfoLocs[mCurrentParseInfo.parse_code] = true;
+                    else
+                        mSecondaryParseInfoLocs[mCurrentParseInfo.parse_code] = false;
+                }
+                else if (mSecondaryParseInfoLocs[mCurrentParseInfo.parse_code] &&
+                          ((mSequenceHeader.picture_coding_mode == 0 && mPictureCount == 1) ||
+                           (mSequenceHeader.picture_coding_mode == 1 && mPictureCount == 2)))
+                {
+                    frame_size = buffer.GetPos() - VC2_PARSE_INFO_SIZE;
+                    break;
+                }
                 mParseInfos.push_back(mCurrentParseInfo);
                 mOffset = buffer.GetPos();
                 mParseState = NEXT_PARSE_INFO_STATE;
