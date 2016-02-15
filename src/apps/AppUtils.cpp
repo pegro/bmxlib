@@ -729,6 +729,8 @@ bool bmx::parse_track_indexes(const char *tracks_str, set<uint32_t> *track_index
         if (tracks_str_ptr)
             tracks_str_ptr++;
     }
+
+    return true;
 }
 
 bool bmx::parse_vc2_mode(const char *mode_str, int *vc2_mode_flags)
