@@ -231,7 +231,7 @@ void VC2MXFDescriptorHelper::SetSequenceHeader(const VC2EssenceParser::SequenceH
     else if (sequence_header->source_params.transfer_function == 2)
         cdci_descriptor->setCaptureGamma(LINEAR_TRANSFER_CH);
     else
-        cdci_descriptor->setCaptureGamma(SMPTE428_1_TRANSFER_CH);
+        cdci_descriptor->setCaptureGamma(SMPTE_DCDM_TRANSFER_CH);
     if (sequence_header->source_params.source_sampling == 1)
         cdci_descriptor->setFieldDominance((sequence_header->source_params.top_field_first ? 1 : 2));
     if (sequence_header->source_params.color_matrix == 0)
