@@ -172,7 +172,7 @@ void VC2MXFDescriptorHelper::UpdateFileDescriptor(FileDescriptor *file_desc_in)
     BMX_ASSERT(cdci_descriptor);
 
     CDCIEssenceDescriptor *cdci_desc_in = dynamic_cast<CDCIEssenceDescriptor*>(file_desc_in);
-    BMX_CHECK(cdci_descriptor);
+    BMX_CHECK(cdci_desc_in);
 
 #define SET_PROPERTY(name)                                                \
     if (cdci_desc_in->have##name() && !cdci_descriptor->have##name())     \
